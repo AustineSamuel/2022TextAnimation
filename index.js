@@ -1,28 +1,40 @@
-if(getQr("canvas")==null){
+
+const getQr= el => document.querySelector(el)
+
+
+if(getQr("canvas") == null){
   const canvasEl=docuement.createElement("canvas");
   document.body.appendChild(canvasEl);
 }
 
-ctx.fillStyle="black";
+const canvas = getQr("canvas");
+const ctx = canvas.getContext("2d");
+canvas.height = innerHeight;
+canvas.width = innerWidth;
+getQr("body").style.padding = 0;
+getQr("body").style.margin = 0;
+const random = (min, max) => Math.random() * (max - min + 1) + min | 0
+
+ctx.fillStyle = "black";
 ctx.fillRect(0,0,canvas.width,canvas.height);
-ctx.font="16px Arial";
-ctx.fillStyle='white';
+ctx.font = "16px Arial";
+ctx.fillStyle = 'white';
 ctx.fillText("loading...",20,20);
 
 
 class TextAnimation{//this class animate particles
-  constructor(x,y,endX,endY,color){
-   this.x=x;
-   this.y=y;
-    this.endX=endX;
-    this.endY=endY;
-    this.color=color;
+  constructor(x, y, endX, endY, color){
+   this.x = x;
+   this.y = y;
+    this.endX = endX;
+    this.endY = endY;
+    this.color = color;
   }
 draw(){//draw particle
   ctx.save();
   ctx.beginPath();
-  ctx.arc(this.x,this.y,1,0,Math.PI*2,true);
-  ctx.fillStyle=this.color;
+  ctx.arc(this.x, this.y, 1, 0, Math.PI*2, true);
+  ctx.fillStyle = this.color;
   ctx.fill();
   ctx.closePath()
   ctx.restore();
@@ -30,9 +42,9 @@ draw(){//draw particle
 }
 
 update(){
-  if(this.x==this.endX && this.y==this.endY)return "save";
-  let Xis={nagetive:false}//Xis means X is nagetive or positive => Xis
-  let Yis={nagetive:false}
+  if(this.x == this.endX && this.y == this.endY)return "save";
+  let Xis = {nagetive:false}//Xis means X is nagetive or positive => Xis
+  let Yis = {nagetive:false}
 if(this.x > this.endX){
   this.x -= 5;
   Xis.nagetive=true
@@ -59,9 +71,9 @@ const testNagetiveNumberCollision = (Xis.nagetive && (this.x <= this.endX));
 
 const testPositiveNumberCollision = (!Xis.nagetive && (this.x >= this.endX))
 
-if( testNagetiveNumberCollision || testPositiveNumberCollision ){
+if(testNagetiveNumberCollision || testPositiveNumberCollision ){
 //end x movement
-this.x=this.endX;
+this.x = this.endX;
 }
 //Y co ordinate as well
 
@@ -82,22 +94,22 @@ this.y=this.endY;
 
 class TextPaticles{
   //here will container and get the pexel data
-  //fail to draw text from image pexel data i need to draw the text from scratch
+ 
 getPexel(){
-  const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-  const data=imageData.data;
-  const cw=imageData.width;
-  const ch=imageData.height;
-ctx.fillStyle="black";
-ctx.fillRect(0,0,canvas.width,canvas.height);
-  for(let y=0;y<=ch;y++){//vartical reading
-    for(let x=0;x<=cw;x++){//for horizontal reading
+  const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+  const data = imageData.data;
+  const cw = imageData.width;
+  const ch = imageData.height;
+ctx.fillStyle = "black";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+  for(let y = 0; y <= ch;y++){//vartical reading
+    for(let x=0; x<=cw; x++){//for horizontal reading
 //getting target color using formulea
-const n=(y*cw+x)*4;
-const red=data[n];
-const green=data[n+1];
-const blue=data[n+2];
-const alphar=data[n+3];
+const n = (y*cw+x)*4;
+const red = data[n];
+const green = data[n+1];
+const blue = data[n+2];
+const alphar = data[n+3];
 
 //end reading..
 if(red >= 100 && green >= 100 && blue >= 100){
@@ -114,7 +126,7 @@ const color=("rgb("+random(0,255)+","+random(0,255)+","+random(0,255)+")");
   drawBox(x,y,color){//draw circle
     ctx.beginPath();
     ctx.arc(x,y,10,0,Math.PI*2,true);
-    ctx.fillStyle=color;
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath()
   }
@@ -122,40 +134,39 @@ const color=("rgb("+random(0,255)+","+random(0,255)+","+random(0,255)+")");
 }
 
 
-const animatedTextParticleList=[];
-let interval=null;
+const animatedTextParticleList = [];
+let interval = null;
 
 
 function init(){
   ctx.beginPath();
-    ctx.fillstyle="black";
+    ctx.fillstyle = "black";
     ctx.fillRect(0,0,canvas.width,canvas.height);  
   ctx.closePath();
-animatedTextParticleList.forEach((e,i)=>{
+animatedTextParticleList.forEach((e,i) => {
 e.draw();
 e.update();
 }); 
-interval=requestAnimationFrame(init);
+interval = requestAnimationFrame(init);
 }
-audio=document.createElement("audio");
-audio.src="https://dl.dropbox.com/s/sy2pp8acc61j4mc/Musica.mp3" 
-onload=()=>{
+audio = document.createElement("audio");
+audio.src = "https://dl.dropbox.com/s/sy2pp8acc61j4mc/Musica.mp3" 
+onload= () => {
   
-const text=new TextPaticles();
+const text = new TextPaticles();
 
 ctx.clearRect(0,0, canvas.width, canvas.height);
 
-ctx.font="100px arial"
-ctx.fillStyle="white";
+ctx.font = "100px arial"
+ctx.fillStyle = "white";
 ctx.fillText("2022",canvas.width/2-120,canvas.height/2);
 text.getPexel();
 console.log("onloaded");
 init();
 alert("Code writen with much love❣️ from Austine Samuel software developer Nigeria (: ")
-//force audio to play
-console.log(audio.readyState)
-let play=setInterval (()=>{
-if(audio.readyState>=2){
+//audio to play
+let play = setInterval (() => {
+if(audio.readyState >= 2){
 alert('Just celebrating more click screen to play Music');
 clearInterval(play);
 }
@@ -165,7 +176,7 @@ clearInterval(play);
 }
 
 
-onclick=()=>{
+onclick = () => {
 audio.play()
 }
 
